@@ -1,6 +1,9 @@
-const path = require('path')
-const TerserPlugin = require('terser-webpack-plugin')
-const UnminifiedWebpackPlugin = require('unminified-webpack-plugin')
+import path from 'path'
+import TerserPlugin from 'terser-webpack-plugin'
+import UnminifiedWebpackPlugin from 'unminified-webpack-plugin'
+import * as url from 'url'
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url))
 
 const paths = {
   source: path.resolve(__dirname, 'src'),
@@ -11,7 +14,7 @@ const commonConfig = {
   output: {
     filename: '[name].min.js',
     path: paths.es5,
-    library: 'rrule',
+    library: { name: 'rrule', type: 'module' },
     libraryTarget: 'umd',
     globalObject: "typeof self !== 'undefined' ? self : this",
   },
@@ -19,6 +22,9 @@ const commonConfig = {
   mode: 'production',
   resolve: {
     extensions: ['.js', '.ts'],
+    extensionAlias: {
+      '.js': ['.ts', '.js'],
+    },
   },
   module: {
     rules: [
@@ -48,4 +54,4 @@ const rruleConfig = Object.assign(
   commonConfig
 )
 
-module.exports = [rruleConfig]
+export default [rruleConfig]

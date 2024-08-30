@@ -1,8 +1,7 @@
-import { Options, Frequency } from './types'
-import { Weekday } from './weekday'
-import { untilStringToDate } from './dateutil'
-import { Days } from './rrule'
-
+import { Options, Frequency } from './types.js'
+import { Weekday } from './weekday.js'
+import { untilStringToDate } from './dateutil.js'
+import { Days } from './rrule.js'
 export function parseString(rfcString: string): Partial<Options> {
   const options = rfcString
     .split('\n')

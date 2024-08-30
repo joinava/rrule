@@ -12,9 +12,12 @@
     "rfc"
   ],
   "author": "Jakub Roztocil, Lars Schöning, and David Golightly",
-  "main": "dist/es5/rrule.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
+  "types": "./dist/esm/index.d.ts",
+  "exports": {
+    "types": "./dist/esm/index.d.ts",
+    "import": "./dist/esm/index.js"
+  },
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git://github.com/jakubroztocil/rrule.git"
@@ -22,9 +25,9 @@
   "scripts": {
     "prebuild": "yarn clean",
     "prepublish": "yarn build",
-    "build": "yarn lint && yarn format-check && tsc -b tsconfig.build.json && webpack && tsc dist/esm/**/*.d.ts",
+    "build": "yarn lint && yarn format-check && tsc -b tsconfig.build.json && webpack && tsc ./dist/esm/**/*.d.ts",
     "clean": "rm -rf dist/",
-    "lint": "yarn eslint . --fix --config .eslintrc.js",
+    "lint": "yarn eslint . --fix --config .eslintrc.cjs",
     "format": "yarn prettier --write .",
     "format-check": "yarn prettier --check .",
     "run-ts": "TS_NODE_PROJECT=tsconfig.json node --loader ts-node/esm",
@@ -54,7 +57,7 @@
     "@types/assert": "^1.4.3",
     "@types/jest": "^29.5.8",
     "@types/mockdate": "^3.0.0",
-    "@types/node": "^17.0.41",
+    "@types/node": "^22.5.1",
     "@typescript-eslint/eslint-plugin": "^5.27.1",
     "@typescript-eslint/parser": "^5.27.1",
     "coverage": "^0.4.1",
@@ -75,7 +78,7 @@
     "ts-jest": "^29.1.1",
     "ts-loader": "^9.3.0",
     "ts-node": "^10.8.1",
-    "typescript": "^4.7.3",
+    "typescript": "5",
     "unminified-webpack-plugin": "^3.0.0",
     "webpack": "^5.73.0",
     "webpack-cli": "^4.9.2"
@@ -84,8 +87,11 @@
     "dist",
     "README.md"
   ],
-  "peerDependencies": {},
+  "engines": {
+    "node": ">=20.11.0",
+    "yarn": ">=3"
+  },
   "dependencies": {
-    "tslib": "^2.4.0"
+    "tslib": "^2.7.0"
   }
 }

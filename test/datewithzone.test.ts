@@ -1,4 +1,4 @@
-import { DateWithZone } from '../src/datewithzone'
+import { DateWithZone } from '../src/datewithzone.js'
 import { set as setMockDate, reset as resetMockDate } from 'mockdate'
 import { datetime, expectedDate } from './lib/utils'
 

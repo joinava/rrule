@@ -1,5 +1,5 @@
-import { Cache } from '../src/cache'
-import { IterArgs } from '../src/iterresult'
+import { Cache } from '../src/cache.js'
+import { IterArgs } from '../src/iterresult.js'
 
 const dates = [
   new Date('2021-01-01T00:00:00.000+00:00'),

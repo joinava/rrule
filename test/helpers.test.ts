@@ -9,7 +9,7 @@ import {
   repeat,
   isPresent,
   isArray,
-} from '../src/helpers'
+} from '../src/helpers.js'
 import { isNumber } from 'util'
 
 describe('isPresent', () => {

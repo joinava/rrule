@@ -5,7 +5,7 @@ import {
   expectedDate,
   TEST_CTX,
 } from './lib/utils'
-import { RRule, rrulestr, Frequency } from '../src/index'
+import { RRule, rrulestr, Frequency } from '../src'
 import { set as setMockDate, reset as resetMockDate } from 'mockdate'
 
 describe('RRule', function () {

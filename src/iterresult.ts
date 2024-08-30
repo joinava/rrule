@@ -1,5 +1,4 @@
-import { QueryMethodTypes, IterResultType } from './types'
-
+import { QueryMethodTypes, IterResultType } from './types.js'
 // =============================================================================
 // Results
 // =============================================================================

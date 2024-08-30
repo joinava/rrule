@@ -1,7 +1,7 @@
 import { parse, datetime, testRecurring, TEST_CTX } from './lib/utils'
 import { RRule, RRuleSet, rrulestr, Frequency } from '../src'
-import { Days } from '../src/rrule'
-import { parseInput } from '../src/rrulestr'
+import { Days } from '../src/rrule.js'
+import { parseInput } from '../src/rrulestr.js'
 
 describe('rrulestr', function () {
   beforeAll(() => {

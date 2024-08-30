@@ -1,4 +1,4 @@
-import { datetime, untilStringToDate } from '../src/dateutil'
+import { datetime, untilStringToDate } from '../src/dateutil.js'
 
 describe('untilStringToDate', () => {
   it('parses a date string', () => {

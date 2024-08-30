@@ -1,3 +1,4 @@
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
   env: {
     browser: true,
@@ -10,7 +11,8 @@ module.exports = {
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: true,
+    tsconfigRootDir: __dirname,
     sourceType: 'module',
   },
   plugins: [
@@ -19,6 +21,7 @@ module.exports = {
     '@typescript-eslint',
   ],
   root: true,
+  ignorePatterns: ['.eslintrc.cjs'],
   rules: {
     '@typescript-eslint/await-thenable': 'error',
     '@typescript-eslint/consistent-type-assertions': 'error',

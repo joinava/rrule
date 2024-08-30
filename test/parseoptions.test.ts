@@ -1,4 +1,4 @@
-import { parseOptions } from '../src/parseoptions'
+import { parseOptions } from '../src/parseoptions.js'
 import { RRule } from '../src'
 
 describe('TZID', () => {

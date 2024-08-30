@@ -1,4 +1,4 @@
-import ENGLISH, { Language } from './i18n'
+import ENGLISH, { Language } from './i18n.js'
 import { RRule } from '../rrule'
 import { Options, ByWeekday } from '../types'
 import { Weekday } from '../weekday'

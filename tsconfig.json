@@ -3,10 +3,11 @@
     "noEmit": true,
     "noImplicitAny": true,
     "sourceMap": true,
-    "module": "commonjs",
     "noEmitOnError": true,
     "esModuleInterop": true,
-    "target": "es6",
+    "module": "es2015",
+    "moduleResolution": "bundler",
+    "target": "ES6",
     "baseUrl": ".",
     "rootDirs": ["./src/", "./test/"]
   },

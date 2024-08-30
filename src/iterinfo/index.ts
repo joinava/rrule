@@ -1,8 +1,8 @@
 import { notEmpty, repeat, range, isPresent } from '../helpers'
 import { ParsedOptions, Frequency } from '../types'
-import { YearInfo, rebuildYear } from './yearinfo'
-import { rebuildMonth, MonthInfo } from './monthinfo'
-import { easter } from './easter'
+import { YearInfo, rebuildYear } from './yearinfo.js'
+import { rebuildMonth, MonthInfo } from './monthinfo.js'
+import { easter } from './easter.js'
 import { Time } from '../datetime'
 import { datetime, sort, toOrdinal } from '../dateutil'
 

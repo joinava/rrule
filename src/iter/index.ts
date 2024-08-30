@@ -6,7 +6,7 @@ import { RRule } from '../rrule'
 import { buildTimeset } from '../parseoptions'
 import { notEmpty, includes, isPresent } from '../helpers'
 import { DateWithZone } from '../datewithzone'
-import { buildPoslist } from './poslist'
+import { buildPoslist } from './poslist.js'
 import { Time, DateTime } from '../datetime'
 
 export function iter<M extends QueryMethodTypes>(

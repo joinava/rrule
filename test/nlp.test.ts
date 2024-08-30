@@ -1,6 +1,6 @@
 import { RRule } from '../src'
-import { optionsToString } from '../src/optionstostring'
-import { DateFormatter } from '../src/nlp/totext'
+import { optionsToString } from '../src/optionstostring.js'
+import { DateFormatter } from '../src/nlp/totext.js'
 import { datetime } from './lib/utils'
 
 const texts = [

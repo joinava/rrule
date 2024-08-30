@@ -14,11 +14,10 @@
  *
  */
 
-export { RRule } from './rrule'
-export { RRuleSet } from './rruleset'
-
-export { rrulestr } from './rrulestr'
-export { Frequency, ByWeekday, Options } from './types'
-export { Weekday, WeekdayStr, ALL_WEEKDAYS } from './weekday'
-export { RRuleStrOptions } from './rrulestr'
-export { datetime } from './dateutil'
+export { RRule } from './rrule.js'
+export { RRuleSet } from './rruleset.js'
+export { rrulestr } from './rrulestr.js'
+export { Frequency, ByWeekday, Options } from './types.js'
+export { Weekday, WeekdayStr, ALL_WEEKDAYS } from './weekday.js'
+export { RRuleStrOptions } from './rrulestr.js'
+export { datetime } from './dateutil.js'
