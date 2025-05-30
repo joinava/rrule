@@ -7,7 +7,7 @@
 		exports["rrule"] = factory();
 	else
 		root["rrule"] = factory();
-})(typeof self !== 'undefined' ? self : this, () => {
+})(typeof self !== 'undefined' ? self : typeof this !== 'undefined' ? this : typeof globalThis !== 'undefined' ? globalThis : {}, () => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The require scope
