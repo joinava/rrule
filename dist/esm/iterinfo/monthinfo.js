@@ -1,5 +1,5 @@
-import { RRule } from '../rrule';
-import { empty, repeat, pymod } from '../helpers';
+import { empty, pymod, repeat } from '../helpers.js';
+import { RRule } from '../rrule.js';
 export function rebuildMonth(year, month, yearlen, mrange, wdaymask, options) {
     var result = {
         lastyear: year,

@@ -1,6 +1,6 @@
+import { isArray, isNumber, isPresent } from '../helpers.js';
+import { RRule } from '../rrule.js';
 import ENGLISH from './i18n.js';
-import { RRule } from '../rrule';
-import { isArray, isNumber, isPresent } from '../helpers';
 // =============================================================================
 // Helper functions
 // =============================================================================

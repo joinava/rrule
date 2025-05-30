@@ -1,8 +1,8 @@
-import ToText from './totext.js';
-import parseText from './parsetext.js';
-import { RRule } from '../rrule';
-import { Frequency } from '../types';
+import { RRule } from '../rrule.js';
+import { Frequency } from '../types.js';
 import ENGLISH from './i18n.js';
+import parseText from './parsetext.js';
+import ToText from './totext.js';
 /* !
  * rrule.js - Library for working with recurrence rules for calendar dates.
  * https://github.com/jakubroztocil/rrule
@@ -118,5 +118,5 @@ var toText = function (rrule, gettext, language, dateFormatter) {
     return new ToText(rrule, gettext, language, dateFormatter).toString();
 };
 var isFullyConvertible = ToText.isFullyConvertible;
-export { fromText, parseText, isFullyConvertible, toText };
+export { fromText, isFullyConvertible, parseText, toText };
 //# sourceMappingURL=index.js.map

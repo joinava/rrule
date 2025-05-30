@@ -1,5 +1,5 @@
-import { combine, fromOrdinal, sort } from '../dateutil';
-import { pymod, isPresent, includes } from '../helpers';
+import { combine, fromOrdinal, sort } from '../dateutil.js';
+import { includes, isPresent, pymod } from '../helpers.js';
 export function buildPoslist(bysetpos, timeset, start, end, ii, dayset) {
     var poslist = [];
     for (var j = 0; j < bysetpos.length; j++) {

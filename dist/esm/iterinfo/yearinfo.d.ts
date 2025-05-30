@@ -1,4 +1,4 @@
-import { ParsedOptions } from '../types';
+import { ParsedOptions } from '../types.js';
 export interface YearInfo {
     yearlen: 365 | 366;
     nextyearlen: 365 | 366;

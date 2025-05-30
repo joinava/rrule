@@ -1,17 +1,17 @@
-import { ParsedOptions } from '../types'
-import { datetime, getWeekday, isLeapYear, toOrdinal } from '../dateutil'
-import { empty, repeat, pymod, includes } from '../helpers'
+import { datetime, getWeekday, isLeapYear, toOrdinal } from '../dateutil.js'
+import { empty, includes, pymod, repeat } from '../helpers.js'
 import {
   M365MASK,
-  MDAY365MASK,
-  NMDAY365MASK,
-  WDAYMASK,
   M365RANGE,
   M366MASK,
-  MDAY366MASK,
-  NMDAY366MASK,
   M366RANGE,
-} from '../masks'
+  MDAY365MASK,
+  MDAY366MASK,
+  NMDAY365MASK,
+  NMDAY366MASK,
+  WDAYMASK,
+} from '../masks.js'
+import { ParsedOptions } from '../types.js'
 
 export interface YearInfo {
   yearlen: 365 | 366

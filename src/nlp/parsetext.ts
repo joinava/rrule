@@ -1,7 +1,7 @@
+import { RRule } from '../rrule.js'
+import { ByWeekday, Options } from '../types.js'
+import { WeekdayStr } from '../weekday.js'
 import ENGLISH, { Language } from './i18n.js'
-import { RRule } from '../rrule'
-import { ByWeekday, Options } from '../types'
-import { WeekdayStr } from '../weekday'
 
 // =============================================================================
 // Parser

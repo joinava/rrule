@@ -1,4 +1,4 @@
-import { ParsedOptions } from '../types';
+import { ParsedOptions } from '../types.js';
 export interface MonthInfo {
     lastyear: number;
     lastmonth: number;

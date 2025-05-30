@@ -1,7 +1,7 @@
-import ToText, { DateFormatter, GetText } from './totext.js';
-import parseText from './parsetext.js';
-import { RRule } from '../rrule';
+import { RRule } from '../rrule.js';
 import { Language } from './i18n.js';
+import parseText from './parsetext.js';
+import ToText, { DateFormatter, GetText } from './totext.js';
 /**
  *
  * Implementation of RRule.fromText() and RRule::toText().
@@ -88,5 +88,5 @@ export interface Nlp {
     isFullyConvertible: typeof isFullyConvertible;
     toText: typeof toText;
 }
-export { fromText, parseText, isFullyConvertible, toText };
+export { fromText, isFullyConvertible, parseText, toText };
 //# sourceMappingURL=index.d.ts.map
