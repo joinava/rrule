@@ -1,22 +1,21 @@
-import { __assign } from "tslib";
 import { Frequency } from './types.js';
 import { Weekday } from './weekday.js';
 import { untilStringToDate } from './dateutil.js';
 import { Days } from './rrule.js';
 export function parseString(rfcString) {
-    var options = rfcString
+    const options = rfcString
         .split('\n')
         .map(parseLine)
-        .filter(function (x) { return x !== null; });
-    return __assign(__assign({}, options[0]), options[1]);
+        .filter((x) => x !== null);
+    return { ...options[0], ...options[1] };
 }
 export function parseDtstart(line) {
-    var options = {};
-    var dtstartWithZone = /DTSTART(?:;TZID=([^:=]+?))?(?::|=)([^;\s]+)/i.exec(line);
+    const options = {};
+    const dtstartWithZone = /DTSTART(?:;TZID=([^:=]+?))?(?::|=)([^;\s]+)/i.exec(line);
     if (!dtstartWithZone) {
         return options;
     }
-    var tzid = dtstartWithZone[1], dtstart = dtstartWithZone[2];
+    const [, tzid, dtstart] = dtstartWithZone;
     if (tzid) {
         options.tzid = tzid;
     }
@@ -27,11 +26,11 @@ function parseLine(rfcString) {
     rfcString = rfcString.replace(/^\s+|\s+$/, '');
     if (!rfcString.length)
         return null;
-    var header = /^([A-Z]+?)[:;]/.exec(rfcString.toUpperCase());
+    const header = /^([A-Z]+?)[:;]/.exec(rfcString.toUpperCase());
     if (!header) {
         return parseRrule(rfcString);
     }
-    var key = header[1];
+    const [, key] = header;
     switch (key.toUpperCase()) {
         case 'RRULE':
         case 'EXRULE':
@@ -39,15 +38,15 @@ function parseLine(rfcString) {
         case 'DTSTART':
             return parseDtstart(rfcString);
         default:
-            throw new Error("Unsupported RFC prop ".concat(key, " in ").concat(rfcString));
+            throw new Error(`Unsupported RFC prop ${key} in ${rfcString}`);
     }
 }
 function parseRrule(line) {
-    var strippedLine = line.replace(/^RRULE:/i, '');
-    var options = parseDtstart(strippedLine);
-    var attrs = line.replace(/^(?:RRULE|EXRULE):/i, '').split(';');
-    attrs.forEach(function (attr) {
-        var _a = attr.split('='), key = _a[0], value = _a[1];
+    const strippedLine = line.replace(/^RRULE:/i, '');
+    const options = parseDtstart(strippedLine);
+    const attrs = line.replace(/^(?:RRULE|EXRULE):/i, '').split(';');
+    attrs.forEach((attr) => {
+        const [key, value] = attr.split('=');
         switch (key.toUpperCase()) {
             case 'FREQ':
                 options.freq = Frequency[value.toUpperCase()];
@@ -65,8 +64,8 @@ function parseRrule(line) {
             case 'BYHOUR':
             case 'BYMINUTE':
             case 'BYSECOND':
-                var num = parseNumber(value);
-                var optionKey = key.toLowerCase();
+                const num = parseNumber(value);
+                const optionKey = key.toLowerCase();
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 options[optionKey] = num;
@@ -78,7 +77,7 @@ function parseRrule(line) {
             case 'DTSTART':
             case 'TZID':
                 // for backwards compatibility
-                var dtstart = parseDtstart(line);
+                const dtstart = parseDtstart(line);
                 options.tzid = dtstart.tzid;
                 options.dtstart = dtstart.dtstart;
                 break;
@@ -96,7 +95,7 @@ function parseRrule(line) {
 }
 function parseNumber(value) {
     if (value.indexOf(',') !== -1) {
-        var values = value.split(',');
+        const values = value.split(',');
         return values.map(parseIndividualNumber);
     }
     return parseIndividualNumber(value);
@@ -108,20 +107,20 @@ function parseIndividualNumber(value) {
     return value;
 }
 function parseWeekday(value) {
-    var days = value.split(',');
-    return days.map(function (day) {
+    const days = value.split(',');
+    return days.map((day) => {
         if (day.length === 2) {
             // MO, TU, ...
             return Days[day]; // wday instanceof Weekday
         }
         // -1MO, +3FR, 1SO, 13TU ...
-        var parts = day.match(/^([+-]?\d{1,2})([A-Z]{2})$/);
+        const parts = day.match(/^([+-]?\d{1,2})([A-Z]{2})$/);
         if (!parts || parts.length < 3) {
-            throw new SyntaxError("Invalid weekday string: ".concat(day));
+            throw new SyntaxError(`Invalid weekday string: ${day}`);
         }
-        var n = Number(parts[1]);
-        var wdaypart = parts[2];
-        var wday = Days[wdaypart].weekday;
+        const n = Number(parts[1]);
+        const wdaypart = parts[2];
+        const wday = Days[wdaypart].weekday;
         return new Weekday(wday, n);
     });
 }

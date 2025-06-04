@@ -4,18 +4,18 @@ import { Weekday } from './weekday.js';
 import { timeToUntilString } from './dateutil.js';
 import { DateWithZone } from './datewithzone.js';
 export function optionsToString(options) {
-    var rrule = [];
-    var dtstart = '';
-    var keys = Object.keys(options);
-    var defaultKeys = Object.keys(DEFAULT_OPTIONS);
-    for (var i = 0; i < keys.length; i++) {
+    const rrule = [];
+    let dtstart = '';
+    const keys = Object.keys(options);
+    const defaultKeys = Object.keys(DEFAULT_OPTIONS);
+    for (let i = 0; i < keys.length; i++) {
         if (keys[i] === 'tzid')
             continue;
         if (!includes(defaultKeys, keys[i]))
             continue;
-        var key = keys[i].toUpperCase();
-        var value = options[keys[i]];
-        var outValue = '';
+        let key = keys[i].toUpperCase();
+        const value = options[keys[i]];
+        let outValue = '';
         if (!isPresent(value) || (isArray(value) && !value.length))
             continue;
         switch (key) {
@@ -44,7 +44,7 @@ export function optionsToString(options) {
                   */
                 key = 'BYDAY';
                 outValue = toArray(value)
-                    .map(function (wday) {
+                    .map((wday) => {
                     if (wday instanceof Weekday) {
                         return wday;
                     }
@@ -63,8 +63,8 @@ export function optionsToString(options) {
                 break;
             default:
                 if (isArray(value)) {
-                    var strValues = [];
-                    for (var j = 0; j < value.length; j++) {
+                    const strValues = [];
+                    for (let j = 0; j < value.length; j++) {
                         strValues[j] = String(value[j]);
                     }
                     outValue = strValues.toString();
@@ -77,17 +77,14 @@ export function optionsToString(options) {
             rrule.push([key, outValue]);
         }
     }
-    var rules = rrule
-        .map(function (_a) {
-        var key = _a[0], value = _a[1];
-        return "".concat(key, "=").concat(value.toString());
-    })
+    const rules = rrule
+        .map(([key, value]) => `${key}=${value.toString()}`)
         .join(';');
-    var ruleString = '';
+    let ruleString = '';
     if (rules !== '') {
-        ruleString = "RRULE:".concat(rules);
+        ruleString = `RRULE:${rules}`;
     }
-    return [dtstart, ruleString].filter(function (x) { return !!x; }).join('\n');
+    return [dtstart, ruleString].filter((x) => !!x).join('\n');
 }
 function buildDtstart(dtstart, tzid) {
     if (!dtstart) {

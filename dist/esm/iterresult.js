@@ -1,12 +1,14 @@
 /**
  * This class helps us to emulate python's generators, sorta.
  */
-var IterResult = /** @class */ (function () {
-    function IterResult(method, args) {
-        this.minDate = null;
-        this.maxDate = null;
-        this._result = [];
-        this.total = 0;
+export default class IterResult {
+    method;
+    args;
+    minDate = null;
+    maxDate = null;
+    _result = [];
+    total = 0;
+    constructor(method, args) {
         this.method = method;
         this.args = args;
         if (method === 'between') {
@@ -30,10 +32,10 @@ var IterResult = /** @class */ (function () {
      * @return {Boolean} true if it makes sense to continue the iteration
      * false if we're done.
      */
-    IterResult.prototype.accept = function (date) {
+    accept(date) {
         ++this.total;
-        var tooEarly = this.minDate && date < this.minDate;
-        var tooLate = this.maxDate && date > this.maxDate;
+        const tooEarly = this.minDate && date < this.minDate;
+        const tooLate = this.maxDate && date > this.maxDate;
         if (this.method === 'between') {
             if (tooEarly)
                 return true;
@@ -51,24 +53,24 @@ var IterResult = /** @class */ (function () {
             return false;
         }
         return this.add(date);
-    };
+    }
     /**
      *
      * @param {Date} date that is part of the result.
      * @return {Boolean} whether we are interested in more values.
      */
-    IterResult.prototype.add = function (date) {
+    add(date) {
         this._result.push(date);
         return true;
-    };
+    }
     /**
      * 'before' and 'after' return only one date, whereas 'all'
      * and 'between' an array.
      *
      * @return {Date,Array?}
      */
-    IterResult.prototype.getValue = function () {
-        var res = this._result;
+    getValue() {
+        const res = this._result;
         switch (this.method) {
             case 'all':
             case 'between':
@@ -78,11 +80,9 @@ var IterResult = /** @class */ (function () {
             default:
                 return (res.length ? res[res.length - 1] : null);
         }
-    };
-    IterResult.prototype.clone = function () {
+    }
+    clone() {
         return new IterResult(this.method, this.args);
-    };
-    return IterResult;
-}());
-export default IterResult;
+    }
+}
 //# sourceMappingURL=iterresult.js.map

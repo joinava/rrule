@@ -1,4 +1,3 @@
-import { __assign } from "tslib";
 import { RRule } from './rrule.js';
 import { RRuleSet } from './rruleset.js';
 import { untilStringToDate } from './dateutil.js';
@@ -8,7 +7,7 @@ import { parseString, parseDtstart } from './parsestring.js';
  * RRuleStr
  * To parse a set of rrule strings
  */
-var DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS = {
     dtstart: null,
     cache: false,
     unfold: false,
@@ -17,28 +16,27 @@ var DEFAULT_OPTIONS = {
     tzid: null,
 };
 export function parseInput(s, options) {
-    var rrulevals = [];
-    var rdatevals = [];
-    var exrulevals = [];
-    var exdatevals = [];
-    var parsedDtstart = parseDtstart(s);
-    var dtstart = parsedDtstart.dtstart;
-    var tzid = parsedDtstart.tzid;
-    var lines = splitIntoLines(s, options.unfold);
-    lines.forEach(function (line) {
-        var _a;
+    const rrulevals = [];
+    let rdatevals = [];
+    const exrulevals = [];
+    let exdatevals = [];
+    const parsedDtstart = parseDtstart(s);
+    const { dtstart } = parsedDtstart;
+    let { tzid } = parsedDtstart;
+    const lines = splitIntoLines(s, options.unfold);
+    lines.forEach((line) => {
         if (!line)
             return;
-        var _b = breakDownLine(line), name = _b.name, parms = _b.parms, value = _b.value;
+        const { name, parms, value } = breakDownLine(line);
         switch (name.toUpperCase()) {
             case 'RRULE':
                 if (parms.length) {
-                    throw new Error("unsupported RRULE parm: ".concat(parms.join(',')));
+                    throw new Error(`unsupported RRULE parm: ${parms.join(',')}`);
                 }
                 rrulevals.push(parseString(line));
                 break;
             case 'RDATE':
-                var _c = (_a = /RDATE(?:;TZID=([^:=]+))?/i.exec(line)) !== null && _a !== void 0 ? _a : [], rdateTzid = _c[1];
+                const [, rdateTzid] = /RDATE(?:;TZID=([^:=]+))?/i.exec(line) ?? [];
                 if (rdateTzid && !tzid) {
                     tzid = rdateTzid;
                 }
@@ -46,7 +44,7 @@ export function parseInput(s, options) {
                 break;
             case 'EXRULE':
                 if (parms.length) {
-                    throw new Error("unsupported EXRULE parm: ".concat(parms.join(',')));
+                    throw new Error(`unsupported EXRULE parm: ${parms.join(',')}`);
                 }
                 exrulevals.push(parseString(value));
                 break;
@@ -60,17 +58,17 @@ export function parseInput(s, options) {
         }
     });
     return {
-        dtstart: dtstart,
-        tzid: tzid,
-        rrulevals: rrulevals,
-        rdatevals: rdatevals,
-        exrulevals: exrulevals,
-        exdatevals: exdatevals,
+        dtstart,
+        tzid,
+        rrulevals,
+        rdatevals,
+        exrulevals,
+        exdatevals,
     };
 }
 function buildRule(s, options) {
-    var _a = parseInput(s, options), rrulevals = _a.rrulevals, rdatevals = _a.rdatevals, exrulevals = _a.exrulevals, exdatevals = _a.exdatevals, dtstart = _a.dtstart, tzid = _a.tzid;
-    var noCache = options.cache === false;
+    const { rrulevals, rdatevals, exrulevals, exdatevals, dtstart, tzid } = parseInput(s, options);
+    const noCache = options.cache === false;
     if (options.compatible) {
         options.forceset = true;
         options.unfold = true;
@@ -80,39 +78,42 @@ function buildRule(s, options) {
         rdatevals.length ||
         exrulevals.length ||
         exdatevals.length) {
-        var rset_1 = new RRuleSet(noCache);
-        rset_1.dtstart(dtstart);
-        rset_1.tzid(tzid || undefined);
-        rrulevals.forEach(function (val) {
-            rset_1.rrule(new RRule(groomRruleOptions(val, dtstart, tzid), noCache));
+        const rset = new RRuleSet(noCache);
+        rset.dtstart(dtstart);
+        rset.tzid(tzid || undefined);
+        rrulevals.forEach((val) => {
+            rset.rrule(new RRule(groomRruleOptions(val, dtstart, tzid), noCache));
         });
-        rdatevals.forEach(function (date) {
-            rset_1.rdate(date);
+        rdatevals.forEach((date) => {
+            rset.rdate(date);
         });
-        exrulevals.forEach(function (val) {
-            rset_1.exrule(new RRule(groomRruleOptions(val, dtstart, tzid), noCache));
+        exrulevals.forEach((val) => {
+            rset.exrule(new RRule(groomRruleOptions(val, dtstart, tzid), noCache));
         });
-        exdatevals.forEach(function (date) {
-            rset_1.exdate(date);
+        exdatevals.forEach((date) => {
+            rset.exdate(date);
         });
         if (options.compatible && options.dtstart)
-            rset_1.rdate(dtstart);
-        return rset_1;
+            rset.rdate(dtstart);
+        return rset;
     }
-    var val = rrulevals[0] || {};
+    const val = rrulevals[0] || {};
     return new RRule(groomRruleOptions(val, val.dtstart || options.dtstart || dtstart, val.tzid || options.tzid || tzid), noCache);
 }
-export function rrulestr(s, options) {
-    if (options === void 0) { options = {}; }
+export function rrulestr(s, options = {}) {
     return buildRule(s, initializeOptions(options));
 }
 function groomRruleOptions(val, dtstart, tzid) {
-    return __assign(__assign({}, val), { dtstart: dtstart, tzid: tzid });
+    return {
+        ...val,
+        dtstart,
+        tzid,
+    };
 }
 function initializeOptions(options) {
-    var invalid = [];
-    var keys = Object.keys(options);
-    var defaultKeys = Object.keys(DEFAULT_OPTIONS);
+    const invalid = [];
+    const keys = Object.keys(options);
+    const defaultKeys = Object.keys(DEFAULT_OPTIONS);
     keys.forEach(function (key) {
         if (!includes(defaultKeys, key))
             invalid.push(key);
@@ -120,7 +121,7 @@ function initializeOptions(options) {
     if (invalid.length) {
         throw new Error('Invalid options: ' + invalid.join(', '));
     }
-    return __assign(__assign({}, DEFAULT_OPTIONS), options);
+    return { ...DEFAULT_OPTIONS, ...options };
 }
 function extractName(line) {
     if (line.indexOf(':') === -1) {
@@ -129,25 +130,24 @@ function extractName(line) {
             value: line,
         };
     }
-    var _a = split(line, ':', 1), name = _a[0], value = _a[1];
+    const [name, value] = split(line, ':', 1);
     return {
-        name: name,
-        value: value,
+        name,
+        value,
     };
 }
 function breakDownLine(line) {
-    var _a = extractName(line), name = _a.name, value = _a.value;
-    var parms = name.split(';');
+    const { name, value } = extractName(line);
+    const parms = name.split(';');
     if (!parms)
         throw new Error('empty property name');
     return {
         name: parms[0].toUpperCase(),
         parms: parms.slice(1),
-        value: value,
+        value,
     };
 }
-function splitIntoLines(s, unfold) {
-    if (unfold === void 0) { unfold = false; }
+function splitIntoLines(s, unfold = false) {
     s = s && s.trim();
     if (!s)
         throw new Error('Invalid empty string');
@@ -156,11 +156,11 @@ function splitIntoLines(s, unfold) {
     if (!unfold) {
         return s.split(/\s/);
     }
-    var lines = s.split('\n');
-    var i = 0;
+    const lines = s.split('\n');
+    let i = 0;
     while (i < lines.length) {
         // TODO
-        var line = (lines[i] = lines[i].replace(/\s+$/g, ''));
+        const line = (lines[i] = lines[i].replace(/\s+$/g, ''));
         if (!line) {
             lines.splice(i, 1);
         }
@@ -175,7 +175,7 @@ function splitIntoLines(s, unfold) {
     return lines;
 }
 function validateDateParm(parms) {
-    parms.forEach(function (parm) {
+    parms.forEach((parm) => {
         if (!/(VALUE=DATE(-TIME)?)|(TZID=)/.test(parm)) {
             throw new Error('unsupported RDATE/EXDATE parm: ' + parm);
         }
@@ -183,6 +183,6 @@ function validateDateParm(parms) {
 }
 function parseRDate(rdateval, parms) {
     validateDateParm(parms);
-    return rdateval.split(',').map(function (datestr) { return untilStringToDate(datestr); });
+    return rdateval.split(',').map((datestr) => untilStringToDate(datestr));
 }
 //# sourceMappingURL=rrulestr.js.map

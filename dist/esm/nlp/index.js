@@ -92,11 +92,10 @@ import ToText from './totext.js';
  * @param {String} text
  * @return {Object, Boolean} the rule, or null.
  */
-var fromText = function (text, language) {
-    if (language === void 0) { language = ENGLISH; }
+const fromText = function (text, language = ENGLISH) {
     return new RRule(parseText(text, language) || undefined);
 };
-var common = [
+const common = [
     'count',
     'until',
     'interval',
@@ -114,9 +113,9 @@ ToText.IMPLEMENTED[Frequency.YEARLY] = ['byweekno', 'byyearday'].concat(common);
 // =============================================================================
 // Export
 // =============================================================================
-var toText = function (rrule, gettext, language, dateFormatter) {
+const toText = function (rrule, gettext, language, dateFormatter) {
     return new ToText(rrule, gettext, language, dateFormatter).toString();
 };
-var isFullyConvertible = ToText.isFullyConvertible;
+const { isFullyConvertible } = ToText;
 export { fromText, isFullyConvertible, parseText, toText };
 //# sourceMappingURL=index.js.map

@@ -3,36 +3,40 @@ import ENGLISH from './i18n.js';
 // =============================================================================
 // Parser
 // =============================================================================
-var Parser = /** @class */ (function () {
-    function Parser(rules) {
-        this.done = true;
+class Parser {
+    rules;
+    text;
+    symbol;
+    value;
+    done = true;
+    constructor(rules) {
         this.rules = rules;
     }
-    Parser.prototype.start = function (text) {
+    start(text) {
         this.text = text;
         this.done = false;
         return this.nextSymbol();
-    };
-    Parser.prototype.isDone = function () {
+    }
+    isDone() {
         return this.done && this.symbol === null;
-    };
-    Parser.prototype.nextSymbol = function () {
-        var best;
-        var bestSymbol;
+    }
+    nextSymbol() {
+        let best;
+        let bestSymbol;
         this.symbol = null;
         this.value = null;
         do {
             if (this.done)
                 return false;
-            var rule = void 0;
+            let rule;
             best = null;
-            for (var name_1 in this.rules) {
-                rule = this.rules[name_1];
-                var match = rule.exec(this.text);
+            for (const name in this.rules) {
+                rule = this.rules[name];
+                const match = rule.exec(this.text);
                 if (match) {
                     if (best === null || match[0].length > best[0].length) {
                         best = match;
-                        bestSymbol = name_1;
+                        bestSymbol = name;
                     }
                 }
             }
@@ -51,11 +55,11 @@ var Parser = /** @class */ (function () {
         this.symbol = bestSymbol;
         this.value = best;
         return true;
-    };
-    Parser.prototype.accept = function (name) {
+    }
+    accept(name) {
         if (this.symbol === name) {
             if (this.value) {
-                var v = this.value;
+                const v = this.value;
                 this.nextSymbol();
                 return v;
             }
@@ -63,21 +67,19 @@ var Parser = /** @class */ (function () {
             return true;
         }
         return false;
-    };
-    Parser.prototype.acceptNumber = function () {
+    }
+    acceptNumber() {
         return this.accept('number');
-    };
-    Parser.prototype.expect = function (name) {
+    }
+    expect(name) {
         if (this.accept(name))
             return true;
         throw new Error('expected ' + name + ' but found ' + this.symbol);
-    };
-    return Parser;
-}());
-export default function parseText(text, language) {
-    if (language === void 0) { language = ENGLISH; }
-    var options = {};
-    var ttr = new Parser(language.tokens);
+    }
+}
+export default function parseText(text, language = ENGLISH) {
+    const options = {};
+    const ttr = new Parser(language.tokens);
     if (!ttr.start(text))
         return null;
     S();
@@ -85,7 +87,7 @@ export default function parseText(text, language) {
     function S() {
         // every [n]
         ttr.expect('every');
-        var n = ttr.acceptNumber();
+        const n = ttr.acceptNumber();
         if (n)
             options.interval = parseInt(n[0], 10);
         if (ttr.isDone())
@@ -151,7 +153,7 @@ export default function parseText(text, language) {
             case 'saturday':
             case 'sunday':
                 options.freq = RRule.WEEKLY;
-                var key = ttr.symbol
+                const key = ttr.symbol
                     .substr(0, 2)
                     .toUpperCase();
                 options.byweekday = [RRule[key]];
@@ -161,7 +163,7 @@ export default function parseText(text, language) {
                 while (ttr.accept('comma')) {
                     if (ttr.isDone())
                         throw new Error('Unexpected end');
-                    var wkd = decodeWKD();
+                    const wkd = decodeWKD();
                     if (!wkd) {
                         throw new Error('Unexpected symbol ' + ttr.symbol + ', expected weekday');
                     }
@@ -192,7 +194,7 @@ export default function parseText(text, language) {
                 while (ttr.accept('comma')) {
                     if (ttr.isDone())
                         throw new Error('Unexpected end');
-                    var m = decodeM();
+                    const m = decodeM();
                     if (!m) {
                         throw new Error('Unexpected symbol ' + ttr.symbol + ', expected month');
                     }
@@ -207,14 +209,14 @@ export default function parseText(text, language) {
         }
     }
     function ON() {
-        var on = ttr.accept('on');
-        var the = ttr.accept('the');
+        const on = ttr.accept('on');
+        const the = ttr.accept('the');
         if (!(on || the))
             return;
         do {
-            var nth = decodeNTH();
-            var wkd = decodeWKD();
-            var m = decodeM();
+            const nth = decodeNTH();
+            const wkd = decodeWKD();
+            const m = decodeM();
             // nth <weekday> | <weekday>
             if (nth) {
                 // ttr.nextSymbol()
@@ -246,7 +248,7 @@ export default function parseText(text, language) {
             }
             else if (ttr.symbol === 'week(s)') {
                 ttr.nextSymbol();
-                var n = ttr.acceptNumber();
+                let n = ttr.acceptNumber();
                 if (!n) {
                     throw new Error('Unexpected symbol ' + ttr.symbol + ', expected week number');
                 }
@@ -271,11 +273,11 @@ export default function parseText(text, language) {
         } while (ttr.accept('comma') || ttr.accept('the') || ttr.accept('on'));
     }
     function AT() {
-        var at = ttr.accept('at');
+        const at = ttr.accept('at');
         if (!at)
             return;
         do {
-            var n = ttr.acceptNumber();
+            let n = ttr.acceptNumber();
             if (!n) {
                 throw new Error('Unexpected symbol ' + ttr.symbol + ', expected hour');
             }
@@ -348,7 +350,7 @@ export default function parseText(text, language) {
                 ttr.nextSymbol();
                 return ttr.accept('last') ? -3 : 3;
             case 'nth':
-                var v = parseInt(ttr.value[1], 10);
+                const v = parseInt(ttr.value[1], 10);
                 if (v < -366 || v > 366)
                     throw new Error('Nth out of range: ' + v);
                 ttr.nextSymbol();
@@ -360,7 +362,7 @@ export default function parseText(text, language) {
     function MDAYs() {
         ttr.accept('on');
         ttr.accept('the');
-        var nth = decodeNTH();
+        let nth = decodeNTH();
         if (!nth)
             return;
         options.bymonthday = [nth];
@@ -376,7 +378,7 @@ export default function parseText(text, language) {
     }
     function F() {
         if (ttr.symbol === 'until') {
-            var date = Date.parse(ttr.text);
+            const date = Date.parse(ttr.text);
             if (!date)
                 throw new Error('Cannot parse until date:' + ttr.text);
             options.until = new Date(date);

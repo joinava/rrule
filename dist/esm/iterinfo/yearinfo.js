@@ -1,21 +1,27 @@
-import { __assign } from "tslib";
 import { datetime, getWeekday, isLeapYear, toOrdinal } from '../dateutil.js';
 import { empty, includes, pymod, repeat } from '../helpers.js';
 import { M365MASK, M365RANGE, M366MASK, M366RANGE, MDAY365MASK, MDAY366MASK, NMDAY365MASK, NMDAY366MASK, WDAYMASK, } from '../masks.js';
 export function rebuildYear(year, options) {
-    var firstyday = datetime(year, 1, 1);
-    var yearlen = isLeapYear(year) ? 366 : 365;
-    var nextyearlen = isLeapYear(year + 1) ? 366 : 365;
-    var yearordinal = toOrdinal(firstyday);
-    var yearweekday = getWeekday(firstyday);
-    var result = __assign(__assign({ yearlen: yearlen, nextyearlen: nextyearlen, yearordinal: yearordinal, yearweekday: yearweekday }, baseYearMasks(year)), { wnomask: null });
+    const firstyday = datetime(year, 1, 1);
+    const yearlen = isLeapYear(year) ? 366 : 365;
+    const nextyearlen = isLeapYear(year + 1) ? 366 : 365;
+    const yearordinal = toOrdinal(firstyday);
+    const yearweekday = getWeekday(firstyday);
+    const result = {
+        yearlen,
+        nextyearlen,
+        yearordinal,
+        yearweekday,
+        ...baseYearMasks(year),
+        wnomask: null,
+    };
     if (empty(options.byweekno)) {
         return result;
     }
     result.wnomask = repeat(0, yearlen + 7);
-    var firstwkst;
-    var wyearlen;
-    var no1wkst = (firstwkst = pymod(7 - yearweekday + options.wkst, 7));
+    let firstwkst;
+    let wyearlen;
+    let no1wkst = (firstwkst = pymod(7 - yearweekday + options.wkst, 7));
     if (no1wkst >= 4) {
         no1wkst = 0;
         // Number of days in the year, plus the days we got
@@ -27,18 +33,18 @@ export function rebuildYear(year, options) {
         // left in last year.
         wyearlen = yearlen - no1wkst;
     }
-    var div = Math.floor(wyearlen / 7);
-    var mod = pymod(wyearlen, 7);
-    var numweeks = Math.floor(div + mod / 4);
-    for (var j = 0; j < options.byweekno.length; j++) {
-        var n = options.byweekno[j];
+    const div = Math.floor(wyearlen / 7);
+    const mod = pymod(wyearlen, 7);
+    const numweeks = Math.floor(div + mod / 4);
+    for (let j = 0; j < options.byweekno.length; j++) {
+        let n = options.byweekno[j];
         if (n < 0) {
             n += numweeks + 1;
         }
         if (!(n > 0 && n <= numweeks)) {
             continue;
         }
-        var i = void 0;
+        let i;
         if (n > 1) {
             i = no1wkst + (n - 1) * 7;
             if (no1wkst !== firstwkst) {
@@ -48,7 +54,7 @@ export function rebuildYear(year, options) {
         else {
             i = no1wkst;
         }
-        for (var k = 0; k < 7; k++) {
+        for (let k = 0; k < 7; k++) {
             result.wnomask[i] = 1;
             i++;
             if (result.wdaymask[i] === options.wkst)
@@ -58,13 +64,13 @@ export function rebuildYear(year, options) {
     if (includes(options.byweekno, 1)) {
         // Check week number 1 of next year as well
         // orig-TODO : Check -numweeks for next year.
-        var i = no1wkst + numweeks * 7;
+        let i = no1wkst + numweeks * 7;
         if (no1wkst !== firstwkst)
             i -= 7 - firstwkst;
         if (i < yearlen) {
             // If week starts in next year, we
             // don't care about it.
-            for (var j = 0; j < 7; j++) {
+            for (let j = 0; j < 7; j++) {
                 result.wnomask[i] = 1;
                 i += 1;
                 if (result.wdaymask[i] === options.wkst)
@@ -79,12 +85,12 @@ export function rebuildYear(year, options) {
         // got days from last year, so there are no
         // days from last year's last week number in
         // this year.
-        var lnumweeks = void 0;
+        let lnumweeks;
         if (!includes(options.byweekno, -1)) {
-            var lyearweekday = getWeekday(datetime(year - 1, 1, 1));
-            var lno1wkst = pymod(7 - lyearweekday.valueOf() + options.wkst, 7);
-            var lyearlen = isLeapYear(year - 1) ? 366 : 365;
-            var weekst = void 0;
+            const lyearweekday = getWeekday(datetime(year - 1, 1, 1));
+            let lno1wkst = pymod(7 - lyearweekday.valueOf() + options.wkst, 7);
+            const lyearlen = isLeapYear(year - 1) ? 366 : 365;
+            let weekst;
             if (lno1wkst >= 4) {
                 lno1wkst = 0;
                 weekst = lyearlen + pymod(lyearweekday - options.wkst, 7);
@@ -98,16 +104,16 @@ export function rebuildYear(year, options) {
             lnumweeks = -1;
         }
         if (includes(options.byweekno, lnumweeks)) {
-            for (var i = 0; i < no1wkst; i++)
+            for (let i = 0; i < no1wkst; i++)
                 result.wnomask[i] = 1;
         }
     }
     return result;
 }
 function baseYearMasks(year) {
-    var yearlen = isLeapYear(year) ? 366 : 365;
-    var firstyday = datetime(year, 1, 1);
-    var wday = getWeekday(firstyday);
+    const yearlen = isLeapYear(year) ? 366 : 365;
+    const firstyday = datetime(year, 1, 1);
+    const wday = getWeekday(firstyday);
     if (yearlen === 365) {
         return {
             mmask: M365MASK,

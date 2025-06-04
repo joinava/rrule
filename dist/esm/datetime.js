@@ -1,68 +1,70 @@
-import { __extends } from "tslib";
 import { Frequency } from './types.js';
 import { pymod, divmod, empty, includes } from './helpers.js';
 import { getWeekday, MAXYEAR, monthRange } from './dateutil.js';
-var Time = /** @class */ (function () {
-    function Time(hour, minute, second, millisecond) {
+export class Time {
+    hour;
+    minute;
+    second;
+    millisecond;
+    constructor(hour, minute, second, millisecond) {
         this.hour = hour;
         this.minute = minute;
         this.second = second;
         this.millisecond = millisecond || 0;
     }
-    Time.prototype.getHours = function () {
+    getHours() {
         return this.hour;
-    };
-    Time.prototype.getMinutes = function () {
+    }
+    getMinutes() {
         return this.minute;
-    };
-    Time.prototype.getSeconds = function () {
+    }
+    getSeconds() {
         return this.second;
-    };
-    Time.prototype.getMilliseconds = function () {
+    }
+    getMilliseconds() {
         return this.millisecond;
-    };
-    Time.prototype.getTime = function () {
+    }
+    getTime() {
         return ((this.hour * 60 * 60 + this.minute * 60 + this.second) * 1000 +
             this.millisecond);
-    };
-    return Time;
-}());
-export { Time };
-var DateTime = /** @class */ (function (_super) {
-    __extends(DateTime, _super);
-    function DateTime(year, month, day, hour, minute, second, millisecond) {
-        var _this = _super.call(this, hour, minute, second, millisecond) || this;
-        _this.year = year;
-        _this.month = month;
-        _this.day = day;
-        return _this;
     }
-    DateTime.fromDate = function (date) {
+}
+export class DateTime extends Time {
+    day;
+    month;
+    year;
+    static fromDate(date) {
         return new this(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds(), date.valueOf() % 1000);
-    };
-    DateTime.prototype.getWeekday = function () {
+    }
+    constructor(year, month, day, hour, minute, second, millisecond) {
+        super(hour, minute, second, millisecond);
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
+    getWeekday() {
         return getWeekday(new Date(this.getTime()));
-    };
-    DateTime.prototype.getTime = function () {
+    }
+    getTime() {
         return new Date(Date.UTC(this.year, this.month - 1, this.day, this.hour, this.minute, this.second, this.millisecond)).getTime();
-    };
-    DateTime.prototype.getDay = function () {
+    }
+    getDay() {
         return this.day;
-    };
-    DateTime.prototype.getMonth = function () {
+    }
+    getMonth() {
         return this.month;
-    };
-    DateTime.prototype.getYear = function () {
+    }
+    getYear() {
         return this.year;
-    };
-    DateTime.prototype.addYears = function (years) {
+    }
+    addYears(years) {
         this.year += years;
-    };
-    DateTime.prototype.addMonths = function (months) {
+    }
+    addMonths(months) {
         this.month += months;
         if (this.month > 12) {
-            var yearDiv = Math.floor(this.month / 12);
-            var monthMod = pymod(this.month, 12);
+            const yearDiv = Math.floor(this.month / 12);
+            const monthMod = pymod(this.month, 12);
             this.month = monthMod;
             this.year += yearDiv;
             if (this.month === 0) {
@@ -70,8 +72,8 @@ var DateTime = /** @class */ (function (_super) {
                 --this.year;
             }
         }
-    };
-    DateTime.prototype.addWeekly = function (days, wkst) {
+    }
+    addWeekly(days, wkst) {
         if (wkst > this.getWeekday()) {
             this.day += -(this.getWeekday() + 1 + (6 - wkst)) + days * 7;
         }
@@ -79,19 +81,19 @@ var DateTime = /** @class */ (function (_super) {
             this.day += -(this.getWeekday() - wkst) + days * 7;
         }
         this.fixDay();
-    };
-    DateTime.prototype.addDaily = function (days) {
+    }
+    addDaily(days) {
         this.day += days;
         this.fixDay();
-    };
-    DateTime.prototype.addHours = function (hours, filtered, byhour) {
+    }
+    addHours(hours, filtered, byhour) {
         if (filtered) {
             // Jump to one iteration before next day
             this.hour += Math.floor((23 - this.hour) / hours) * hours;
         }
         for (;;) {
             this.hour += hours;
-            var _a = divmod(this.hour, 24), dayDiv = _a.div, hourMod = _a.mod;
+            const { div: dayDiv, mod: hourMod } = divmod(this.hour, 24);
             if (dayDiv) {
                 this.hour = hourMod;
                 this.addDaily(dayDiv);
@@ -99,8 +101,8 @@ var DateTime = /** @class */ (function (_super) {
             if (empty(byhour) || includes(byhour, this.hour))
                 break;
         }
-    };
-    DateTime.prototype.addMinutes = function (minutes, filtered, byhour, byminute) {
+    }
+    addMinutes(minutes, filtered, byhour, byminute) {
         if (filtered) {
             // Jump to one iteration before next day
             this.minute +=
@@ -108,7 +110,7 @@ var DateTime = /** @class */ (function (_super) {
         }
         for (;;) {
             this.minute += minutes;
-            var _a = divmod(this.minute, 60), hourDiv = _a.div, minuteMod = _a.mod;
+            const { div: hourDiv, mod: minuteMod } = divmod(this.minute, 60);
             if (hourDiv) {
                 this.minute = minuteMod;
                 this.addHours(hourDiv, false, byhour);
@@ -118,8 +120,8 @@ var DateTime = /** @class */ (function (_super) {
                 break;
             }
         }
-    };
-    DateTime.prototype.addSeconds = function (seconds, filtered, byhour, byminute, bysecond) {
+    }
+    addSeconds(seconds, filtered, byhour, byminute, bysecond) {
         if (filtered) {
             // Jump to one iteration before next day
             this.second +=
@@ -128,7 +130,7 @@ var DateTime = /** @class */ (function (_super) {
         }
         for (;;) {
             this.second += seconds;
-            var _a = divmod(this.second, 60), minuteDiv = _a.div, secondMod = _a.mod;
+            const { div: minuteDiv, mod: secondMod } = divmod(this.second, 60);
             if (minuteDiv) {
                 this.second = secondMod;
                 this.addMinutes(minuteDiv, false, byhour, byminute);
@@ -139,12 +141,12 @@ var DateTime = /** @class */ (function (_super) {
                 break;
             }
         }
-    };
-    DateTime.prototype.fixDay = function () {
+    }
+    fixDay() {
         if (this.day <= 28) {
             return;
         }
-        var daysinmonth = monthRange(this.year, this.month - 1)[1];
+        let daysinmonth = monthRange(this.year, this.month - 1)[1];
         if (this.day <= daysinmonth) {
             return;
         }
@@ -160,9 +162,9 @@ var DateTime = /** @class */ (function (_super) {
             }
             daysinmonth = monthRange(this.year, this.month - 1)[1];
         }
-    };
-    DateTime.prototype.add = function (options, filtered) {
-        var freq = options.freq, interval = options.interval, wkst = options.wkst, byhour = options.byhour, byminute = options.byminute, bysecond = options.bysecond;
+    }
+    add(options, filtered) {
+        const { freq, interval, wkst, byhour, byminute, bysecond } = options;
         switch (freq) {
             case Frequency.YEARLY:
                 return this.addYears(interval);
@@ -179,8 +181,6 @@ var DateTime = /** @class */ (function (_super) {
             case Frequency.SECONDLY:
                 return this.addSeconds(interval, filtered, byhour, byminute, bysecond);
         }
-    };
-    return DateTime;
-}(Time));
-export { DateTime };
+    }
+}
 //# sourceMappingURL=datetime.js.map

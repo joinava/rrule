@@ -8,27 +8,27 @@ import { RRule } from '../rrule.js';
 import { freqIsDailyOrGreater, } from '../types.js';
 import { buildPoslist } from './poslist.js';
 export function iter(iterResult, options) {
-    var dtstart = options.dtstart, freq = options.freq, interval = options.interval, until = options.until, bysetpos = options.bysetpos;
-    var count = options.count;
+    const { dtstart, freq, interval, until, bysetpos } = options;
+    let count = options.count;
     if (count === 0 || interval === 0) {
         return emitResult(iterResult);
     }
-    var counterDate = DateTime.fromDate(dtstart);
-    var ii = new Iterinfo(options);
+    const counterDate = DateTime.fromDate(dtstart);
+    const ii = new Iterinfo(options);
     ii.rebuild(counterDate.year, counterDate.month);
-    var timeset = makeTimeset(ii, counterDate, options);
+    let timeset = makeTimeset(ii, counterDate, options);
     for (;;) {
-        var _a = ii.getdayset(freq)(counterDate.year, counterDate.month, counterDate.day), dayset = _a[0], start = _a[1], end = _a[2];
-        var filtered = removeFilteredDays(dayset, start, end, ii, options);
+        const [dayset, start, end] = ii.getdayset(freq)(counterDate.year, counterDate.month, counterDate.day);
+        const filtered = removeFilteredDays(dayset, start, end, ii, options);
         if (notEmpty(bysetpos)) {
-            var poslist = buildPoslist(bysetpos, timeset, start, end, ii, dayset);
-            for (var j = 0; j < poslist.length; j++) {
-                var res = poslist[j];
+            const poslist = buildPoslist(bysetpos, timeset, start, end, ii, dayset);
+            for (let j = 0; j < poslist.length; j++) {
+                const res = poslist[j];
                 if (until && res > until) {
                     return emitResult(iterResult);
                 }
                 if (res >= dtstart) {
-                    var rezonedDate = rezoneIfNeeded(res, options);
+                    const rezonedDate = rezoneIfNeeded(res, options);
                     if (!iterResult.accept(rezonedDate)) {
                         return emitResult(iterResult);
                     }
@@ -42,20 +42,20 @@ export function iter(iterResult, options) {
             }
         }
         else {
-            for (var j = start; j < end; j++) {
-                var currentDay = dayset[j];
+            for (let j = start; j < end; j++) {
+                const currentDay = dayset[j];
                 if (!isPresent(currentDay)) {
                     continue;
                 }
-                var date = fromOrdinal(ii.yearordinal + currentDay);
-                for (var k = 0; k < timeset.length; k++) {
-                    var time = timeset[k];
-                    var res = combine(date, time);
+                const date = fromOrdinal(ii.yearordinal + currentDay);
+                for (let k = 0; k < timeset.length; k++) {
+                    const time = timeset[k];
+                    const res = combine(date, time);
                     if (until && res > until) {
                         return emitResult(iterResult);
                     }
                     if (res >= dtstart) {
-                        var rezonedDate = rezoneIfNeeded(res, options);
+                        const rezonedDate = rezoneIfNeeded(res, options);
                         if (!iterResult.accept(rezonedDate)) {
                             return emitResult(iterResult);
                         }
@@ -84,7 +84,7 @@ export function iter(iterResult, options) {
     }
 }
 function isFiltered(ii, currentDay, options) {
-    var bymonth = options.bymonth, byweekno = options.byweekno, byweekday = options.byweekday, byeaster = options.byeaster, bymonthday = options.bymonthday, bynmonthday = options.bynmonthday, byyearday = options.byyearday;
+    const { bymonth, byweekno, byweekday, byeaster, bymonthday, bynmonthday, byyearday, } = options;
     return ((notEmpty(bymonth) && !includes(bymonth, ii.mmask[currentDay])) ||
         (notEmpty(byweekno) && !ii.wnomask[currentDay]) ||
         (notEmpty(byweekday) && !includes(byweekday, ii.wdaymask[currentDay])) ||
@@ -108,9 +108,9 @@ function emitResult(iterResult) {
     return iterResult.getValue();
 }
 function removeFilteredDays(dayset, start, end, ii, options) {
-    var filtered = false;
-    for (var dayCounter = start; dayCounter < end; dayCounter++) {
-        var currentDay = dayset[dayCounter];
+    let filtered = false;
+    for (let dayCounter = start; dayCounter < end; dayCounter++) {
+        const currentDay = dayset[dayCounter];
         filtered = isFiltered(ii, currentDay, options);
         if (filtered)
             dayset[currentDay] = null;
@@ -118,7 +118,7 @@ function removeFilteredDays(dayset, start, end, ii, options) {
     return filtered;
 }
 function makeTimeset(ii, counterDate, options) {
-    var freq = options.freq, byhour = options.byhour, byminute = options.byminute, bysecond = options.bysecond;
+    const { freq, byhour, byminute, bysecond } = options;
     if (freqIsDailyOrGreater(freq)) {
         return buildTimeset(options);
     }
