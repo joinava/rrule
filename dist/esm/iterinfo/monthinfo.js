@@ -1,18 +1,18 @@
 import { empty, pymod, repeat } from '../helpers.js';
 import { RRule } from '../rrule.js';
 export function rebuildMonth(year, month, yearlen, mrange, wdaymask, options) {
-    var result = {
+    const result = {
         lastyear: year,
         lastmonth: month,
         nwdaymask: [],
     };
-    var ranges = [];
+    let ranges = [];
     if (options.freq === RRule.YEARLY) {
         if (empty(options.bymonth)) {
             ranges = [[0, yearlen]];
         }
         else {
-            for (var j = 0; j < options.bymonth.length; j++) {
+            for (let j = 0; j < options.bymonth.length; j++) {
                 month = options.bymonth[j];
                 ranges.push(mrange.slice(month - 1, month + 1));
             }
@@ -27,13 +27,13 @@ export function rebuildMonth(year, month, yearlen, mrange, wdaymask, options) {
     // Weekly frequency won't get here, so we may not
     // care about cross-year weekly periods.
     result.nwdaymask = repeat(0, yearlen);
-    for (var j = 0; j < ranges.length; j++) {
-        var rang = ranges[j];
-        var first = rang[0];
-        var last = rang[1] - 1;
-        for (var k = 0; k < options.bynweekday.length; k++) {
-            var i = void 0;
-            var _a = options.bynweekday[k], wday = _a[0], n = _a[1];
+    for (let j = 0; j < ranges.length; j++) {
+        const rang = ranges[j];
+        const first = rang[0];
+        const last = rang[1] - 1;
+        for (let k = 0; k < options.bynweekday.length; k++) {
+            let i;
+            const [wday, n] = options.bynweekday[k];
             if (n < 0) {
                 i = last + (n + 1) * 7;
                 i -= pymod(wdaymask[i] - wday, 7);

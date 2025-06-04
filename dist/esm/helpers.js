@@ -2,36 +2,35 @@
 // Helper functions
 // =============================================================================
 import { ALL_WEEKDAYS } from './weekday.js';
-export var isPresent = function (value) {
+export const isPresent = function (value) {
     return value !== null && value !== undefined;
 };
-export var isNumber = function (value) {
+export const isNumber = function (value) {
     return typeof value === 'number';
 };
-export var isWeekdayStr = function (value) {
+export const isWeekdayStr = function (value) {
     return typeof value === 'string' && ALL_WEEKDAYS.includes(value);
 };
-export var isArray = Array.isArray;
+export const isArray = Array.isArray;
 /**
  * Simplified version of python's range()
  */
-export var range = function (start, end) {
-    if (end === void 0) { end = start; }
+export const range = function (start, end = start) {
     if (arguments.length === 1) {
         end = start;
         start = 0;
     }
-    var rang = [];
-    for (var i = start; i < end; i++)
+    const rang = [];
+    for (let i = start; i < end; i++)
         rang.push(i);
     return rang;
 };
-export var clone = function (array) {
+export const clone = function (array) {
     return [].concat(array);
 };
-export var repeat = function (value, times) {
-    var i = 0;
-    var array = [];
+export const repeat = function (value, times) {
+    let i = 0;
+    const array = [];
     if (isArray(value)) {
         for (; i < times; i++)
             array[i] = [].concat(value);
@@ -42,15 +41,14 @@ export var repeat = function (value, times) {
     }
     return array;
 };
-export var toArray = function (item) {
+export const toArray = function (item) {
     if (isArray(item)) {
         return item;
     }
     return [item];
 };
-export function padStart(item, targetLength, padString) {
-    if (padString === void 0) { padString = ' '; }
-    var str = String(item);
+export function padStart(item, targetLength, padString = ' ') {
+    const str = String(item);
     targetLength = targetLength >> 0;
     if (str.length > targetLength) {
         return String(str);
@@ -64,8 +62,8 @@ export function padStart(item, targetLength, padString) {
 /**
  * Python like split
  */
-export var split = function (str, sep, num) {
-    var splits = str.split(sep);
+export const split = function (str, sep, num) {
+    const splits = str.split(sep);
     return num
         ? splits.slice(0, num).concat([splits.slice(num).join(sep)])
         : splits;
@@ -85,18 +83,18 @@ export var split = function (str, sep, num) {
  * @return {number} a % b where the result is between 0 and b (either 0 <= x < b
  * or b < x <= 0, depending on the sign of b).
  */
-export var pymod = function (a, b) {
-    var r = a % b;
+export const pymod = function (a, b) {
+    const r = a % b;
     // If r and b differ in sign, add b to wrap the result to the correct sign.
     return r * b < 0 ? r + b : r;
 };
 /**
  * @see: <http://docs.python.org/library/functions.html#divmod>
  */
-export var divmod = function (a, b) {
+export const divmod = function (a, b) {
     return { div: Math.floor(a / b), mod: pymod(a, b) };
 };
-export var empty = function (obj) {
+export const empty = function (obj) {
     return !isPresent(obj) || obj.length === 0;
 };
 /**
@@ -106,13 +104,13 @@ export var empty = function (obj) {
  * the fact that in Python an empty list's/tuple's
  * boolean value is False, whereas in JS it's true
  */
-export var notEmpty = function (obj) {
+export const notEmpty = function (obj) {
     return !empty(obj);
 };
 /**
  * Return true if a value is in an array
  */
-export var includes = function (arr, val) {
+export const includes = function (arr, val) {
     return notEmpty(arr) && arr.indexOf(val) !== -1;
 };
 //# sourceMappingURL=helpers.js.map

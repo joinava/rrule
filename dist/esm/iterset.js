@@ -2,8 +2,8 @@ import { DateWithZone } from './datewithzone.js';
 import { iter } from './iter/index.js';
 import { sort } from './dateutil.js';
 export function iterSet(iterResult, _rrule, _exrule, _rdate, _exdate, tzid) {
-    var _exdateHash = {};
-    var _accept = iterResult.accept;
+    const _exdateHash = {};
+    const _accept = iterResult.accept;
     function evalExdate(after, before) {
         _exrule.forEach(function (rrule) {
             rrule.between(after, before, true).forEach(function (date) {
@@ -12,11 +12,11 @@ export function iterSet(iterResult, _rrule, _exrule, _rdate, _exdate, tzid) {
         });
     }
     _exdate.forEach(function (date) {
-        var zonedDate = new DateWithZone(date, tzid).rezonedDate();
+        const zonedDate = new DateWithZone(date, tzid).rezonedDate();
         _exdateHash[Number(zonedDate)] = true;
     });
     iterResult.accept = function (date) {
-        var dt = Number(date);
+        const dt = Number(date);
         if (isNaN(dt))
             return _accept.call(this, date);
         if (!_exdateHash[dt]) {
@@ -31,7 +31,7 @@ export function iterSet(iterResult, _rrule, _exrule, _rdate, _exdate, tzid) {
     if (iterResult.method === 'between') {
         evalExdate(iterResult.args.after, iterResult.args.before);
         iterResult.accept = function (date) {
-            var dt = Number(date);
+            const dt = Number(date);
             if (!_exdateHash[dt]) {
                 _exdateHash[dt] = true;
                 return _accept.call(this, date);
@@ -39,15 +39,15 @@ export function iterSet(iterResult, _rrule, _exrule, _rdate, _exdate, tzid) {
             return true;
         };
     }
-    for (var i = 0; i < _rdate.length; i++) {
-        var zonedDate = new DateWithZone(_rdate[i], tzid).rezonedDate();
+    for (let i = 0; i < _rdate.length; i++) {
+        const zonedDate = new DateWithZone(_rdate[i], tzid).rezonedDate();
         if (!iterResult.accept(new Date(zonedDate.getTime())))
             break;
     }
     _rrule.forEach(function (rrule) {
         iter(iterResult, rrule.options);
     });
-    var res = iterResult._result;
+    const res = iterResult._result;
     sort(res);
     switch (iterResult.method) {
         case 'all':
