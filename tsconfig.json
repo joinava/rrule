@@ -5,11 +5,11 @@
     "sourceMap": true,
     "noEmitOnError": true,
     "esModuleInterop": true,
-    "module": "es2015",
+    "module": "esnext",
     "moduleResolution": "bundler",
-    "target": "ES6",
-    "baseUrl": ".",
-    "rootDirs": ["./src/", "./test/"]
+    "target": "es2024",
+    "rootDirs": ["./src/", "./test/"],
+    "outDir": "./dist"
   },
   "include": ["./src/**/*", "./test/**/*"],
   "exclude": ["node_modules"]

@@ -1,17 +1,9 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "./dist/esm",
-    "outDir": "./dist/esm",
-    "declaration": true,
-    "declarationMap": true,
-    "noImplicitAny": true,
-    "sourceMap": true,
-    "module": "esnext",
+    "noEmit": false,
     "moduleResolution": "bundler",
-    "noEmitOnError": true,
-    "target": "es2023",
-    "importHelpers": true,
-    "esModuleInterop": true,
+    "target": "es2024",
     "rootDirs": ["./src/"]
   },
   "include": ["./src/**/*"],

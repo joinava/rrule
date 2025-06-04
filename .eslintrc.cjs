@@ -4,11 +4,7 @@ module.exports = {
     browser: true,
     node: true,
   },
-  extends: [
-    'prettier',
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: true,
@@ -25,19 +21,6 @@ module.exports = {
   rules: {
     '@typescript-eslint/await-thenable': 'error',
     '@typescript-eslint/consistent-type-assertions': 'error',
-    '@typescript-eslint/member-delimiter-style': [
-      'error',
-      {
-        multiline: {
-          delimiter: 'none',
-          requireLast: true,
-        },
-        singleline: {
-          delimiter: 'semi',
-          requireLast: false,
-        },
-      },
-    ],
     '@typescript-eslint/naming-convention': 'off',
     '@typescript-eslint/no-empty-function': 'error',
     '@typescript-eslint/no-extra-semi': 'off',
@@ -54,13 +37,6 @@ module.exports = {
       },
     ],
     '@typescript-eslint/prefer-namespace-keyword': 'error',
-    '@typescript-eslint/quotes': [
-      'error',
-      'single',
-      {
-        avoidEscape: true,
-      },
-    ],
     '@typescript-eslint/semi': 'off',
     '@typescript-eslint/triple-slash-reference': [
       'error',
@@ -70,7 +46,6 @@ module.exports = {
         lib: 'always',
       },
     ],
-    '@typescript-eslint/type-annotation-spacing': 'error',
     '@typescript-eslint/unified-signatures': 'error',
     'brace-style': ['error', '1tbs'],
     'comma-dangle': 'off',
@@ -117,6 +92,7 @@ module.exports = {
     'no-unused-labels': 'error',
     'no-var': 'error',
     'one-var': ['error', 'never'],
+    'no-extra-semi': 'off',
     quotes: 'off',
     radix: 'error',
     semi: 'off',
